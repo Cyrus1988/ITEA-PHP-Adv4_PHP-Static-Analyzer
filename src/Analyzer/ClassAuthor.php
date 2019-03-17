@@ -1,8 +1,17 @@
 <?php
 
-namespace Greeflas\StaticAnalyzer\Analyzer;
+/*
+ * This file is part of the "ClassCounter" package.
+ *
+ * (c) Alexey Kirichenko <Cyrus1988@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-use Greeflas\StaticAnalyzer\PhpClassInfo;
+namespace Cyrus\ClassStat\Analyzer;
+
+use Cyrus\ClassStat\PhpClassInfo;
 use phpDocumentor\Reflection\DocBlockFactory;
 use Symfony\Component\Finder\Finder;
 

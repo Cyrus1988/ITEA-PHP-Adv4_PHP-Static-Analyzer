@@ -1,5 +1,5 @@
 {
-  "name": "cyrus1988/class-counter",
+  "name": "cyrus1988/class-stat",
   "description": "",
   "type": "project",
   "license": "BSD-3-Clause",
@@ -22,7 +22,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Cyrus\\ClassCounter": "src/"
+      "Cyrus\\ClassStat\\": "src/"
     }
   },
   "scripts": {
