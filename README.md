@@ -1,6 +1,8 @@
 PHP Static Analyzer
 ===================
 
+-![Custom badge](https://img.shields.io/badge/greeflas-default--project-red.svg)
+
 Installation
 ------------
 
@@ -12,7 +14,7 @@ Usage
 `$ ./bin/console class-author-stat <projectDir> <developerEmail>` - counts classes/interfaces/trait
 created by some developer in project.
 
-`$ ./bin/console class-stat <filename>` - information about file/Class properties and methods
+`$ ./bin/console class-stat <className>` - information about Class properties and methods
 
 Code style fixer
 ----------------

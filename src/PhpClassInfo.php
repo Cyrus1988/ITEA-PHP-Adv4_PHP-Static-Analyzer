@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Cyrus\ClassStat;
+namespace Greeflas\StaticAnalyzer;
 
 /**
  * Helper class for getting information about PHP classes.

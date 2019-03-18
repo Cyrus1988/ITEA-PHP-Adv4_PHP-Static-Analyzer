@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Cyrus\ClassStat\Command;
+namespace Greeflas\StaticAnalyzer\Command;
 
-use Cyrus\ClassStat\Analyzer\ClassAuthor;
+use Greeflas\StaticAnalyzer\Analyzer\ClassAuthor;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

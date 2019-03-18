@@ -1,12 +1,12 @@
 {
-  "name": "cyrus1988/class-stat",
+  "name": "greeflas/php-static-analyzer",
   "description": "",
   "type": "project",
   "license": "BSD-3-Clause",
   "authors": [
     {
-      "name": "Alexey Kirichenko",
-      "email": "Cyrus5723126@gmail.com"
+      "name": "Vladimir Kuprienko",
+      "email": "vldmr.kuprienko@gmail.com"
     }
   ],
   "minimum-stability": "stable",
@@ -22,7 +22,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Cyrus\\ClassStat\\": "src/"
+      "Greeflas\\StaticAnalyzer\\": "src/"
     }
   },
   "scripts": {

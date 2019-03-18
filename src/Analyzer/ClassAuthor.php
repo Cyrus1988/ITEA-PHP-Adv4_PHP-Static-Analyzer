@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Cyrus\ClassStat\Analyzer;
+namespace Greeflas\StaticAnalyzer\Analyzer;
 
-use Cyrus\ClassStat\PhpClassInfo;
+use Greeflas\StaticAnalyzer\PhpClassInfo;
 use phpDocumentor\Reflection\DocBlockFactory;
 use Symfony\Component\Finder\Finder;
 

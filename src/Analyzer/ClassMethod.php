@@ -9,28 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Cyrus\ClassStat\Analyzer;
+namespace Greeflas\StaticAnalyzer\Analyzer;
 
-use Cyrus\ClassStat\PhpClassInfo;
+use Greeflas\StaticAnalyzer\PhpClassInfo;
 use Symfony\Component\Finder\Finder;
 
 class ClassMethod
 {
-    private $className;
-
-    private const PUBLIC = 'public';
-    private const ABSTRACT = 'abstract';
-    private const FINAL = 'final';
-    private const PROTECTED = 'protected';
-    private const STATIC = 'static';
-
-
     public $methods = [
-    'public' => 0,
-    'public-static' => 0,
-    'protected' => 0,
-    'protected-static' => 0,
-    'private' => 0,
+        'public' => 0,
+        'public-static' => 0,
+        'protected' => 0,
+        'protected-static' => 0,
+        'private' => 0,
     ];
 
     public $properties = [
@@ -41,9 +32,17 @@ class ClassMethod
         'private-static' => 0,
     ];
 
-    public function __construct(string $className)
+    private const TYPE_PUBLIC = 'public';
+    private const TYPE_ABSTRACT = 'abstract';
+    private const TYPE_FINAL = 'final';
+    private const TYPE_PROTECTED = 'protected';
+    private const TYPE_STATIC = 'static';
+    private const TYPE_PRIVATE = 'private';
+    private $fullClassName;
+
+    public function __construct(string $fullClassName)
     {
-        $this->className=$className;
+        $this->fullClassName=$fullClassName;
     }
 
     /**
@@ -62,22 +61,19 @@ class ClassMethod
             $array = \explode(' ', $type);
 
             foreach ($array as $type) {
-                if (self::PUBLIC === $type) {
+                if (self::TYPE_PUBLIC === $type) {
                     $this->methods['public']++;
 
-                    if (\in_array(self::STATIC, $array)) {
-                        $this->methods['public']++;
+                    if (\in_array(self::TYPE_STATIC, $array)) {
                         $this->methods['public-static']++;
                     }
-                } elseif (self::PROTECTED === $type) {
+                } elseif (self::TYPE_PROTECTED === $type) {
                     $this->methods['protected']++;
-                    $this->methods['protected-static']++;
 
-                    if (\in_array(self::STATIC, $array)) {
-                        $this->methods['protected']++;
+                    if (\in_array(self::TYPE_STATIC, $array)) {
                         $this->methods['protected-static']++;
                     }
-                } elseif (self::PROTECTED === $type) {
+                } elseif (self::TYPE_PRIVATE === $type) {
                     $this->methods['private']++;
                 }
             }
@@ -117,7 +113,7 @@ class ClassMethod
      *
      * @return string
      */
-    public function getInfo()
+    public function getInfo(): string
     {
         $finder = Finder::create()
             ->in(__DIR__)
@@ -129,22 +125,18 @@ class ClassMethod
 
         foreach ($finder as $file) {
             $namespace = PhpClassInfo::getFullClassName($file->getPathname());
-
             try {
                 $reflector = new \ReflectionClass($namespace);
             } catch (\ReflectionException $e) {
                 continue;
             }
-
-            if ($this->className == $reflector->getShortName()) {
-                $className = $reflector->getShortName();
-
+            if ($this->fullClassName == $reflector->getShortName()) {
                 if ($reflector->isFinal()) {
-                    $classType = self::FINAL;
+                    $classType = self::TYPE_FINAL;
                 } elseif ($reflector->isAbstract()) {
-                    $classType = self::ABSTRACT;
+                    $classType = self::TYPE_ABSTRACT;
                 } else {
-                    $classType = self::PUBLIC;
+                    $classType = self::TYPE_PUBLIC;
                 }
 
                 $this->getClassMethodCount($reflector);
@@ -152,29 +144,6 @@ class ClassMethod
             }
         }
 
-        $classInfo = $this->showInfo($className, $classType);
-
-        return $classInfo;
-    }
-
-    /**
-     * prepares information for output
-     *
-     * @param $className
-     * @param $classType
-     *
-     * @return string
-     */
-    public function showInfo($className, $classType)
-    {
-        return "Class: $className is $classType" . \PHP_EOL .
-            'Properties:' . \PHP_EOL .
-            'public:' . $this->properties['public'] . ' (' . $this->properties['public-static'] . ' static)' . \PHP_EOL .
-            'protected:' . $this->properties['protected'] . \PHP_EOL .
-            'private:' . $this->properties['private'] . ' (' . $this->properties['private-static'] . ' static)' . \PHP_EOL .
-            'Methods:' . \PHP_EOL .
-            'public:' . $this->methods['public'] . ' (' . $this->methods['public-static'] . ' static)' . \PHP_EOL .
-            'protected:' . $this->methods['protected'] . ' (' . $this->methods['protected-static'] . ' static)' . \PHP_EOL .
-            'private:' . $this->methods['private'] . \PHP_EOL;
+        return $classType;
     }
 }
