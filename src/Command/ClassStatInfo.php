@@ -33,6 +33,12 @@ class ClassStatInfo extends Command
             );
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return null|int|void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $className = $input->getArgument('className');

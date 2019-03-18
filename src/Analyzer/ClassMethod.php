@@ -46,6 +46,11 @@ class ClassMethod
         $this->className=$className;
     }
 
+    /**
+     * collect information about  class method
+     *
+     * @param \ReflectionClass $reflector
+     */
     public function getClassMethodCount(\ReflectionClass $reflector): void
     {
         $methods = $reflector->getMethods();
@@ -79,6 +84,11 @@ class ClassMethod
         }
     }
 
+    /**
+     * collect information about class properties
+     *
+     * @param \ReflectionClass $reflector
+     */
     public function getClassPropertiesCount(\ReflectionClass $reflector): void
     {
         $properties = $reflector->getProperties();
@@ -102,6 +112,11 @@ class ClassMethod
         }
     }
 
+    /**
+     * collects information about the class, access modifiers and properties
+     *
+     * @return string
+     */
     public function getInfo()
     {
         $finder = Finder::create()
@@ -110,7 +125,6 @@ class ClassMethod
             ->name('/^[A-Z].+\.php$/')
             ;
 
-        $className = '';
         $classType='';
 
         foreach ($finder as $file) {
@@ -138,16 +152,29 @@ class ClassMethod
             }
         }
 
-        $classInfo ="Class: $className is $classType" . \PHP_EOL .
-                    'Properties:' . \PHP_EOL .
-                        'public:' . $this->properties['public'] . ' (' . $this->properties['public-static'] . ' static)' . \PHP_EOL .
-                        'protected:' . $this->properties['protected'] . \PHP_EOL .
-                        'private:' . $this->properties['private'] . ' (' . $this->properties['private-static'] . ' static)' . \PHP_EOL .
-                    'Methods:' . \PHP_EOL .
-                        'public:' . $this->methods['public'] . ' (' . $this->methods['public-static'] . ' static)' . \PHP_EOL .
-                        'protected:' . $this->methods['protected'] . ' (' . $this->methods['protected-static'] . ' static)' . \PHP_EOL .
-                        'private:' . $this->methods['private'] . \PHP_EOL;
+        $classInfo = $this->showInfo($className, $classType);
 
         return $classInfo;
+    }
+
+    /**
+     * prepares information for output
+     *
+     * @param $className
+     * @param $classType
+     *
+     * @return string
+     */
+    public function showInfo($className, $classType)
+    {
+        return "Class: $className is $classType" . \PHP_EOL .
+            'Properties:' . \PHP_EOL .
+            'public:' . $this->properties['public'] . ' (' . $this->properties['public-static'] . ' static)' . \PHP_EOL .
+            'protected:' . $this->properties['protected'] . \PHP_EOL .
+            'private:' . $this->properties['private'] . ' (' . $this->properties['private-static'] . ' static)' . \PHP_EOL .
+            'Methods:' . \PHP_EOL .
+            'public:' . $this->methods['public'] . ' (' . $this->methods['public-static'] . ' static)' . \PHP_EOL .
+            'protected:' . $this->methods['protected'] . ' (' . $this->methods['protected-static'] . ' static)' . \PHP_EOL .
+            'private:' . $this->methods['private'] . \PHP_EOL;
     }
 }
