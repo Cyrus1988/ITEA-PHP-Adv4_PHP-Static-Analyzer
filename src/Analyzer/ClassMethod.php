@@ -11,9 +11,6 @@
 
 namespace Greeflas\StaticAnalyzer\Analyzer;
 
-use Greeflas\StaticAnalyzer\PhpClassInfo;
-use Symfony\Component\Finder\Finder;
-
 class ClassMethod
 {
     public $methods = [
@@ -42,7 +39,7 @@ class ClassMethod
 
     public function __construct(string $fullClassName)
     {
-        $this->fullClassName=$fullClassName;
+        $this->fullClassName= new \ReflectionClass($fullClassName);
     }
 
     /**
@@ -115,35 +112,17 @@ class ClassMethod
      */
     public function getInfo(): string
     {
-        $finder = Finder::create()
-            ->in(__DIR__)
-            ->files()
-            ->name('/^[A-Z].+\.php$/')
-            ;
-
-        $classType='';
-
-        foreach ($finder as $file) {
-            $namespace = PhpClassInfo::getFullClassName($file->getPathname());
-            try {
-                $reflector = new \ReflectionClass($namespace);
-            } catch (\ReflectionException $e) {
-                continue;
-            }
-            if ($this->fullClassName == $reflector->getShortName()) {
-                if ($reflector->isFinal()) {
-                    $classType = self::TYPE_FINAL;
-                } elseif ($reflector->isAbstract()) {
-                    $classType = self::TYPE_ABSTRACT;
-                } else {
-                    $classType = self::TYPE_PUBLIC;
-                }
-
-                $this->getClassMethodCount($reflector);
-                $this->getClassPropertiesCount($reflector);
-            }
+        if ($this->fullClassName->isFinal()) {
+            $classType = self::TYPE_FINAL;
+        } elseif ($this->fullClassName->isAbstract()) {
+            $classType = self::TYPE_ABSTRACT;
+        } else {
+            $classType = self::TYPE_PUBLIC;
         }
 
+        $this->getClassMethodCount($this->fullClassName);
+        $this->getClassPropertiesCount($this->fullClassName);
+        
         return $classType;
     }
 }
