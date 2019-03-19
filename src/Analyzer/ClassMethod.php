@@ -11,24 +11,11 @@
 
 namespace Greeflas\StaticAnalyzer\Analyzer;
 
+use Greeflas\StaticAnalyzer\Methods;
+use Greeflas\StaticAnalyzer\Properties;
+
 class ClassMethod
 {
-    public $methods = [
-        'public' => 0,
-        'public-static' => 0,
-        'protected' => 0,
-        'protected-static' => 0,
-        'private' => 0,
-    ];
-
-    public $properties = [
-        'public' => 0,
-        'public-static' => 0,
-        'protected' => 0,
-        'private' => 0,
-        'private-static' => 0,
-    ];
-
     private const TYPE_PUBLIC = 'public';
     private const TYPE_ABSTRACT = 'abstract';
     private const TYPE_FINAL = 'final';
@@ -46,8 +33,9 @@ class ClassMethod
      * collect information about  class method
      *
      * @param \ReflectionClass $reflector
+     * @param Methods $methodClass
      */
-    public function getClassMethodCount(\ReflectionClass $reflector): void
+    private function getClassMethodCount(\ReflectionClass $reflector, Methods $methodClass): void
     {
         $methods = $reflector->getMethods();
 
@@ -59,47 +47,50 @@ class ClassMethod
 
             foreach ($array as $type) {
                 if (self::TYPE_PUBLIC === $type) {
-                    $this->methods['public']++;
+                    $methodClass->setPublicMethod();
 
                     if (\in_array(self::TYPE_STATIC, $array)) {
-                        $this->methods['public-static']++;
+                        $methodClass->setPublicStaticMethod();
                     }
                 } elseif (self::TYPE_PROTECTED === $type) {
-                    $this->methods['protected']++;
+                    $methodClass->setProtectedMethod();
 
                     if (\in_array(self::TYPE_STATIC, $array)) {
-                        $this->methods['protected-static']++;
+                        $methodClass->setProtectedStaticMethod();
                     }
                 } elseif (self::TYPE_PRIVATE === $type) {
-                    $this->methods['private']++;
+                    $methodClass->setPrivateMethod();
                 }
             }
         }
     }
 
+
+
     /**
      * collect information about class properties
      *
      * @param \ReflectionClass $reflector
+     * @param Properties $propertyClass
      */
-    public function getClassPropertiesCount(\ReflectionClass $reflector): void
+    private function getClassPropertiesCount(\ReflectionClass $reflector, Properties $propertyClass): void
     {
         $properties = $reflector->getProperties();
 
         foreach ($properties as $prop) {
             if ($prop->isPublic()) {
-                $this->properties['public']++;
+                $propertyClass->setPublicPropetry();
 
                 if ($prop->isStatic()) {
-                    $this->properties['public-static']++;
+                    $propertyClass->setPublicStaticPropetry();
                 }
             } elseif ($prop->isProtected()) {
-                $this->properties['protected']++;
+                $propertyClass->setProtectedPropetry();
             } elseif ($prop->isPrivate()) {
-                $this->properties['private']++;
+                $propertyClass->setPrivatePropetry();
 
                 if ($prop->isStatic()) {
-                    $this->properties['private-static']++;
+                    $propertyClass->setPrivateStaticPropetry();
                 }
             }
         }
@@ -108,9 +99,12 @@ class ClassMethod
     /**
      * collects information about the class, access modifiers and properties
      *
+     * @param Methods $methodClass
+     * @param Properties $propertyClass
+     *
      * @return string
      */
-    public function getInfo(): string
+    public function getInfo(Methods $methodClass, Properties $propertyClass): string
     {
         if ($this->fullClassName->isFinal()) {
             $classType = self::TYPE_FINAL;
@@ -120,9 +114,9 @@ class ClassMethod
             $classType = self::TYPE_PUBLIC;
         }
 
-        $this->getClassMethodCount($this->fullClassName);
-        $this->getClassPropertiesCount($this->fullClassName);
-        
+        $this->getClassMethodCount($this->fullClassName, $methodClass);
+        $this->getClassPropertiesCount($this->fullClassName, $propertyClass);
+
         return $classType;
     }
 }

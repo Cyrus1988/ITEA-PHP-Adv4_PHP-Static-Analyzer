@@ -12,6 +12,8 @@
 namespace Greeflas\StaticAnalyzer\Command;
 
 use Greeflas\StaticAnalyzer\Analyzer\ClassMethod;
+use Greeflas\StaticAnalyzer\Methods;
+use Greeflas\StaticAnalyzer\Properties;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -47,18 +49,22 @@ class ClassStatInfo extends Command
         $className = $input->getArgument('fullClassName');
 
         $analyzer = new ClassMethod($className);
-        $result = $analyzer->getInfo();
+        $methodClass = new Methods();
+        $propertyClass = new Properties();
+
+        $result = $analyzer->getInfo($methodClass, $propertyClass);
+
 
         $output->writeln(
-            "Class: $className is $result" . \PHP_EOL .
+            "Class: $className is " . $result . \PHP_EOL .
             'Properties:' . \PHP_EOL .
-            'public:' . $analyzer->properties['public'] . ' (' . $analyzer->properties['public-static'] . ' static)' . \PHP_EOL .
-            'protected:' . $analyzer->properties['protected'] . \PHP_EOL .
-            'private:' . $analyzer->properties['private'] . ' (' . $analyzer->properties['private-static'] . ' static)' . \PHP_EOL .
+            'public:' . $propertyClass->getPublicPropetry() . ' (' . $propertyClass->getPublicStaticPropetry() . ' static)' . \PHP_EOL .
+            'protected:' . $propertyClass->getProtectedPropetry() . \PHP_EOL .
+            'private:' . $propertyClass->getPrivatePropetry() . ' (' . $propertyClass->getPrivateStaticPropetry() . ' static)' . \PHP_EOL .
             'Methods:' . \PHP_EOL .
-            'public:' . $analyzer->methods['public'] . ' (' . $analyzer->methods['public-static'] . ' static)' . \PHP_EOL .
-            'protected:' . $analyzer->methods['protected'] . ' (' . $analyzer->methods['protected-static'] . ' static)' . \PHP_EOL .
-            'private:' . $analyzer->methods['private'] . \PHP_EOL
+            'public:' . $methodClass->getPublicMethod() . ' (' . $methodClass->getPublicStaticMethod() . 'static)' . \PHP_EOL .
+            'protected:' . $methodClass->getProtectedMethod() . ' (' . $methodClass->getProtectedStaticMethod() . ' static)' . \PHP_EOL .
+            'private:' . $methodClass->getPrivateMethod() . \PHP_EOL
         );
     }
 }
