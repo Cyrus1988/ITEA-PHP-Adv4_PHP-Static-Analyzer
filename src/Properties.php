@@ -16,33 +16,32 @@ class Properties
     private $publicPropetry = 0;
     private $publicStaticPropetry = 0;
     private $protectedPropetry = 0;
+    private $protectedStaticPropetry = 0;
     private $privatePropetry = 0;
-    private $privateStaticPropetry = 0;
 
-    public function setPublicPropetry()
+    public function incrementPublicPropetry()
     {
         $this->publicPropetry++;
     }
 
-    public function setPublicStaticPropetry()
+    public function incrementPublicStaticPropetry()
     {
         $this->publicStaticPropetry++;
     }
 
-    public function setProtectedPropetry()
+    public function incrementProtectedPropetry()
     {
         $this->protectedPropetry++;
     }
 
-
-    public function setPrivatePropetry()
+    public function incrementProtectedStaticPropetry()
     {
-        $this->privatePropetry++;
+        $this->protectedStaticPropetry++;
     }
 
-    public function setPrivateStaticPropetry()
+    public function incrementPrivatePropetry()
     {
-        $this->privateStaticPropetry++;
+        $this->privatePropetry++;
     }
 
     public function getPublicPropetry()
@@ -60,13 +59,14 @@ class Properties
         return $this->protectedPropetry;
     }
 
+    public function getProtectedStaticPropetry()
+    {
+        return $this->protectedStaticPropetry;
+    }
+
     public function getPrivatePropetry()
     {
         return $this->privatePropetry;
     }
 
-    public function getPrivateStaticPropetry()
-    {
-        return $this->privateStaticPropetry;
-    }
 }

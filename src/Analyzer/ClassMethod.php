@@ -11,7 +11,7 @@
 
 namespace Greeflas\StaticAnalyzer\Analyzer;
 
-use Greeflas\StaticAnalyzer\Methods;
+use Greeflas\StaticAnalyzer\ClassMembersInfo;
 use Greeflas\StaticAnalyzer\Properties;
 
 class ClassMethod
@@ -22,6 +22,7 @@ class ClassMethod
     private const TYPE_PROTECTED = 'protected';
     private const TYPE_STATIC = 'static';
     private const TYPE_PRIVATE = 'private';
+    private const TYPE_DEFAULT = 'default';
     private $fullClassName;
 
     public function __construct(string $fullClassName)
@@ -33,9 +34,9 @@ class ClassMethod
      * collect information about  class method
      *
      * @param \ReflectionClass $reflector
-     * @param Methods $methodClass
+     * @param ClassMembersInfo $methodClass
      */
-    private function getClassMethodCount(\ReflectionClass $reflector, Methods $methodClass): void
+    private function getClassMethodCount(\ReflectionClass $reflector, ClassMembersInfo $methodClass): void
     {
         $methods = $reflector->getMethods();
 
@@ -47,19 +48,20 @@ class ClassMethod
 
             foreach ($array as $type) {
                 if (self::TYPE_PUBLIC === $type) {
-                    $methodClass->setPublicMethod();
+                    $methodClass->incrementPublicMethod();
 
                     if (\in_array(self::TYPE_STATIC, $array)) {
-                        $methodClass->setPublicStaticMethod();
+                        $methodClass->incrementPublicStaticMethod();
                     }
                 } elseif (self::TYPE_PROTECTED === $type) {
-                    $methodClass->setProtectedMethod();
+                    $methodClass->incrementProtectedMethod();
+
+                } elseif (self::TYPE_PRIVATE === $type) {
+                    $methodClass->incrementPrivateMethod();
 
                     if (\in_array(self::TYPE_STATIC, $array)) {
-                        $methodClass->setProtectedStaticMethod();
+                        $methodClass->incrementPrivateStaticMethod();
                     }
-                } elseif (self::TYPE_PRIVATE === $type) {
-                    $methodClass->setPrivateMethod();
                 }
             }
         }
@@ -79,19 +81,19 @@ class ClassMethod
 
         foreach ($properties as $prop) {
             if ($prop->isPublic()) {
-                $propertyClass->setPublicPropetry();
+                $propertyClass->incrementPublicPropetry();
 
                 if ($prop->isStatic()) {
-                    $propertyClass->setPublicStaticPropetry();
+                    $propertyClass->incrementPublicStaticPropetry();
                 }
             } elseif ($prop->isProtected()) {
-                $propertyClass->setProtectedPropetry();
-            } elseif ($prop->isPrivate()) {
-                $propertyClass->setPrivatePropetry();
+                $propertyClass->incrementProtectedPropetry();
 
                 if ($prop->isStatic()) {
-                    $propertyClass->setPrivateStaticPropetry();
+                    $propertyClass->incrementProtectedStaticPropetry();
                 }
+            } elseif ($prop->isPrivate()) {
+                $propertyClass->incrementPrivatePropetry();
             }
         }
     }
@@ -99,19 +101,19 @@ class ClassMethod
     /**
      * collects information about the class, access modifiers and properties
      *
-     * @param Methods $methodClass
+     * @param ClassMembersInfo $methodClass
      * @param Properties $propertyClass
      *
      * @return string
      */
-    public function getInfo(Methods $methodClass, Properties $propertyClass): string
+    public function getInfo(ClassMembersInfo $methodClass, Properties $propertyClass): string
     {
         if ($this->fullClassName->isFinal()) {
             $classType = self::TYPE_FINAL;
         } elseif ($this->fullClassName->isAbstract()) {
             $classType = self::TYPE_ABSTRACT;
         } else {
-            $classType = self::TYPE_PUBLIC;
+            $classType = self::TYPE_DEFAULT;
         }
 
         $this->getClassMethodCount($this->fullClassName, $methodClass);

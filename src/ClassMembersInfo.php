@@ -11,38 +11,40 @@
 
 namespace Greeflas\StaticAnalyzer;
 
-class Methods
+class ClassMembersInfo
 {
     private $publicMethod = 0;
     private $publicStaticMethod = 0;
     private $protectedMethod = 0;
-    private $protectedStaticMethod = 0;
     private $privateMethod = 0;
+    private $privateStaticMethod = 0;
 
-    public function setPublicMethod()
+    public function incrementPublicMethod()
     {
         $this->publicMethod++;
     }
 
-    public function setPublicStaticMethod()
+    public function incrementPublicStaticMethod()
     {
         $this->publicStaticMethod++;
     }
 
-    public function setProtectedMethod()
+    public function incrementProtectedMethod()
     {
         $this->protectedMethod++;
     }
 
-    public function setProtectedStaticMethod()
-    {
-        $this->protectedStaticMethod++;
-    }
 
-    public function setPrivateMethod()
+    public function incrementPrivateMethod()
     {
         $this->privateMethod++;
     }
+
+    public function incrementPrivateStaticMethod()
+    {
+        $this->privateStaticMethod++;
+    }
+
 
     public function getPublicMethod()
     {
@@ -59,13 +61,13 @@ class Methods
         return $this->protectedMethod;
     }
 
-    public function getProtectedStaticMethod()
-    {
-        return $this->protectedStaticMethod;
-    }
-
     public function getPrivateMethod()
     {
         return $this->privateMethod;
+    }
+
+    public function getPrivateStaticMethod()
+    {
+        return $this->privateStaticMethod;
     }
 }
